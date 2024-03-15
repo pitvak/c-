@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 //Створіть клас ArrayManipulator, який має методи для роботи з масивами цілих чисел:
 //Метод GenerateRandomArray(int length, int min, int max),
 //який створює та повертає новий масив заданої довжини з випадковими числами в діапазоні від min до max.
@@ -11,7 +11,7 @@ class Program
 {
     class ArrayManipulator
     {
-        public int
+       
 
        public int[] GenerateRandomArray(int length, int min, int max)
         {
@@ -25,19 +25,19 @@ class Program
         }
 
 
-        public int SortArray(int[] Array)
-        {
-            Console.WriteLine("Enter n:");
-                      int n = int.Parse(Console.ReadLine());
-                      int[] Array = new int[n];
-                      Console.WriteLine("Enter elements:");
-                      for(int i = 0; i < n; i++)
-                      {
-                          Array[i] = int.Parse(Console.ReadLine());
-                      }
+        //public int SortArray(int[] Array)
+        //{
+        //    Console.WriteLine("Enter n:");
+        //              int n = int.Parse(Console.ReadLine());
+        //              int[] Array = new int[n];
+        //              Console.WriteLine("Enter elements:");
+        //              for(int i = 0; i < n; i++)
+        //              {
+        //                  Array[i] = int.Parse(Console.ReadLine());
+        //              }
                         
-                      Array.Sort(Array);
-        }
+        //              Array.Sort(Array);
+        //}
     }
 
 
