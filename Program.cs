@@ -1,57 +1,78 @@
+﻿//Зчитує дані з файлу employees.xml.
+//Файл містить список співробітників у форматі XML,
+//де кожен співробітник має такі властивості: Name, Position, HireDate.
+//Сортує співробітників за датою прийому на роботу (від найстаріших до найновіших) за допомогою LINQ.
+//Зберігає відсортований список співробітників у новий XML файл sorted_employees.xml.
+//Записує інформацію про співробітників в текстовий файл employees.txt у наступному форматі:
+//Name: [Name] Position: [Position] HireDate: [HireDate]
 using System;
-//Створіть клас ArrayManipulator, який має методи для роботи з масивами цілих чисел:
-//Метод GenerateRandomArray(int length, int min, int max),
-//який створює та повертає новий масив заданої довжини з випадковими числами в діапазоні від min до max.
-//Метод FindMax(int[] array), який знаходить та повертає найбільший елемент у масиві.
-//Метод SortArray(int[] array), який сортує масив у зростаючому порядку.
-//Після створення класу запустіть програму, яка створює масив,
-//знаходить найбільший елемент та сортує масив.
-//Виведіть початковий масив, знайдений максимум та відсортований масив на консоль.
+using System.Xml.Linq;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+
 class Program
 {
-    class ArrayManipulator
+    class Employee
     {
-       
-
-       public int[] GenerateRandomArray(int length, int min, int max)
-        {
-            Random random = new Random();
-            int[] array = new int[length];
-            for (int i = 0; i < length; i++)
-            {
-                array[i] = random.Next(min, max + 1);
-            }
-            return array;
-        }
-
-
-        //public int SortArray(int[] Array)
-        //{
-        //    Console.WriteLine("Enter n:");
-        //              int n = int.Parse(Console.ReadLine());
-        //              int[] Array = new int[n];
-        //              Console.WriteLine("Enter elements:");
-        //              for(int i = 0; i < n; i++)
-        //              {
-        //                  Array[i] = int.Parse(Console.ReadLine());
-        //              }
-                        
-        //              Array.Sort(Array);
-        //}
+        public string Name { get; set; }
+        public string Position { get; set; }
+        public DateTime HireDate { get; set; }
     }
-
-
-    static void Main()
-    {
-        ArrayManipulator manipulator = new ArrayManipulator();
-
     
-        int[] array = manipulator.GenerateRandomArray(10, 1, 100);
+
+    static void Main(string[] args)
+    {
+        string inputFilePath = "C:\\Users\\Admin\\source\\repos\\модуль3сішарп\\модуль3сішарп\\employees.xml";
+        XDocument doc = XDocument.Load(inputFilePath);
 
         
-        Console.WriteLine("Array:");
-        Console.WriteLine(string.Join(", ", array));
+        var employees = doc.Descendants("Employee")
+            .Select(e => new Employee
+            {
+                Name = e.Element("Name")?.Value,
+                Position = e.Element("Position")?.Value,
+                HireDate = DateTime.Parse(e.Element("HireDate")?.Value)
+            })
+            .ToList();
+
+        // Сорт
+        var sortedEmployees = employees.OrderBy(e => e.HireDate).ToList();
+
+        
+        string outputXmlFilePath = "C:\\Users\\Admin\\source\\repos\\модуль3сішарп\\модуль3сішарп\\sorted_employees.xml";
+        var sortedDoc = new XDocument(
+            new XElement("Employees",
+                sortedEmployees.Select(e =>
+                    new XElement("Employee",
+                        new XElement("Name", e.Name),
+                        new XElement("Position", e.Position),
+                        new XElement("HireDate", e.HireDate.ToString("yyyy-MM-dd"))
+                    )
+                )
+            )
+        );
+        sortedDoc.Save(outputXmlFilePath);
+        Console.WriteLine("Information about sorted employees succesfully saved to sorted_employees.xml");
+
+        //тхт
+        string outputTxtFilePath = "C:\\Users\\Admin\\source\\repos\\модуль3сішарп\\модуль3сішарп\\employees.txt";
+        using (StreamWriter writer = new StreamWriter(outputTxtFilePath))
+        {
+            foreach (var employee in sortedEmployees)
+            {
+                writer.WriteLine($"Name: {employee.Name} Position: {employee.Position} HireDate: {employee.HireDate:yyyy-MM-dd}");
+            }
+        }
+
+        Console.WriteLine("Information about employees succesfully saved to employees.txt");
 
 
     }
+
+
+
+
+
 }
